@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const env = require("dotenv").config();
 const SECRET = process.env.SECRET;
 const KEY = process.env.KEY;
+const ticker = "msft";
 
 const options = {
   method: "GET",
@@ -15,7 +16,7 @@ const options = {
 };
 
 fetch(
-  "https://stock-and-options-trading-data-provider.p.rapidapi.com/options/aapl",
+  `https://stock-and-options-trading-data-provider.p.rapidapi.com/options/${ticker}`,
   options
 )
   .then((response) => response.json())
