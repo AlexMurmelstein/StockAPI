@@ -5,6 +5,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "node-fetch": "^1.7.3",
+    "pg": "^8.8.0",
     "typescript": "^4.8.2",
     "yahoo-stock-api": "^1.1.10"
   },
@@ -12,6 +13,7 @@
     "start": "nodemon ./dist/polygone.js"
   },
   "devDependencies": {
-    "@types/node": "^18.7.16"
+    "@types/node": "^18.7.16",
+    "@types/pg": "^8.6.5"
   }
 }
