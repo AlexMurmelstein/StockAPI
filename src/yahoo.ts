@@ -3,19 +3,18 @@
 
 //These 2 were copy-pasted from API's docs
 import axios from "axios";
-//BTW, note we have to install ts types with some packages, all kinds of problems
 import { URLSearchParams } from "url";
 //
 import "dotenv/config";
-//Note above line below: importing without * causes error TS1192:
-import * as pg from "pg";
+//BTW, note we have to install ts types with some packages, all kinds of problems
+import pg from "pg";
 const { Pool } = pg;
 //Tried to use type string|undefined, but it caused a complicated bug
 const KEY: any = process.env.YAHOO_KEY;
 const HOST: any = process.env.YAHOO_HOST;
 const PGUSER: any = process.env.PG_USER;
 const PGPASSWORD: any = process.env.PG_PWD;
-const ticker: string = "googl";
+const ticker: string = "AAPL";
 const endpoint = "earnings";
 
 //Axios section
@@ -55,7 +54,7 @@ const callAPI = async function (endParam: string) {
   return axiosTwo.data;
 };
 
-// callAPI(endpoint);
+callAPI(endpoint);
 
 ////Here we will establish a complex operation to dig the data we need
 const earning = async function (year: Number) {
@@ -73,6 +72,8 @@ const earning = async function (year: Number) {
   console.log(filterData);
   return filterData.Earnings;
 };
+
+// earning(2021);
 
 //Linking to postgres, local;
 ////Note: we could use a Client class, but Pool is more flexible and efficient
@@ -100,39 +101,18 @@ const create_table: string = `CREATE TABLE ticker_data (
   stock_value_ann DECIMAL
 )`;
 ////Insertion of partial data
-const insert_earnings = function (earnings: number) {
-  return `INSERT INTO ticker_data (
+const insert_earnings = `INSERT INTO ticker_data (
 	ticker,
   earnings
 )
 VALUES (
-	'${ticker}',
-  ${earnings}
+	'googl',
+  94680000000
 );`;
-};
-
-const tempString = `INSERT INTO ticker_data (
-	ticker,
-  earnings
-)
-VALUES (
-	'GOOGL',
-  5000
-);`;
-
-//Stopping here because the rudimentary version worked!!!
 
 //Another note: when I'm not sure about type in complex stuff like this, I'll use any to avoid complications
 const pgConnect = async function () {
-  //////This has minor bugs, will return later:
-  // const insert = await callAPI(endpoint);
-  // if (!insert) {
-  //   console.log("API call failed");
-  //   return;
-  // }
-  // const insertedString = insert_earnings(20000);
-  // console.log("IS", insertedString);
-  const results = await pool.query(tempString);
+  const results = await pool.query(insert_earnings);
   if (!results) {
     console.log("No results from pg!");
     return;

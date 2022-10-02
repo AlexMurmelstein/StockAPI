@@ -11,19 +11,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 //These 2 were copy-pasted from API's docs
 import axios from "axios";
-//BTW, note we have to install ts types with some packages, all kinds of problems
 import { URLSearchParams } from "url";
 //
 import "dotenv/config";
-//Note above line below: importing without * causes error TS1192:
-import * as pg from "pg";
+//BTW, note we have to install ts types with some packages, all kinds of problems
+import pg from "pg";
 const { Pool } = pg;
 //Tried to use type string|undefined, but it caused a complicated bug
 const KEY = process.env.YAHOO_KEY;
 const HOST = process.env.YAHOO_HOST;
 const PGUSER = process.env.PG_USER;
 const PGPASSWORD = process.env.PG_PWD;
-const ticker = "googl";
+const ticker = "AAPL";
 const endpoint = "earnings";
 //Axios section
 //All these were copy-pasted from API's docs
@@ -60,7 +59,7 @@ const callAPI = function (endParam) {
         return axiosTwo.data;
     });
 };
-// callAPI(endpoint);
+callAPI(endpoint);
 ////Here we will establish a complex operation to dig the data we need
 const earning = function (year) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -79,6 +78,7 @@ const earning = function (year) {
         return filterData.Earnings;
     });
 };
+// earning(2021);
 //Linking to postgres, local;
 ////Note: we could use a Client class, but Pool is more flexible and efficient
 ////Note 2: two last set to 0 to prevent connection timeout bug
@@ -104,37 +104,18 @@ const create_table = `CREATE TABLE ticker_data (
   stock_value_ann DECIMAL
 )`;
 ////Insertion of partial data
-const insert_earnings = function (earnings) {
-    return `INSERT INTO ticker_data (
+const insert_earnings = `INSERT INTO ticker_data (
 	ticker,
   earnings
 )
 VALUES (
-	'${ticker}',
-  ${earnings}
+	'googl',
+  94680000000
 );`;
-};
-const tempString = `INSERT INTO ticker_data (
-	ticker,
-  earnings
-)
-VALUES (
-	'GOOGL',
-  5000
-);`;
-//Stopping here because the rudimentary version worked!!!
 //Another note: when I'm not sure about type in complex stuff like this, I'll use any to avoid complications
 const pgConnect = function () {
     return __awaiter(this, void 0, void 0, function* () {
-        //////This has minor bugs, will return later:
-        // const insert = await callAPI(endpoint);
-        // if (!insert) {
-        //   console.log("API call failed");
-        //   return;
-        // }
-        // const insertedString = insert_earnings(20000);
-        // console.log("IS", insertedString);
-        const results = yield pool.query(tempString);
+        const results = yield pool.query(insert_earnings);
         if (!results) {
             console.log("No results from pg!");
             return;
