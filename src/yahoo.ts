@@ -41,12 +41,12 @@ const options = {
 const callAPI = async function (endParam: string) {
   const axiosOne = await axios.request(options);
   if (!axiosOne) {
-    console.log("error!");
+    console.error("error!");
     return;
   }
   const axiosTwo = await axiosOne.data;
   if (!axiosTwo) {
-    console.log("No data retrieved!");
+    console.error("No data retrieved!");
     return;
   }
   console.log("Endpoint: ", endParam);
@@ -60,13 +60,13 @@ callAPI(endpoint);
 const earning = async function (year: Number) {
   const data = await callAPI("earnings");
   if (!data) {
-    console.log("no data!");
+    console.error("no data!");
     return;
   }
   //Again issues with types, when tried Object it gave me trouble
   const filterData = await data.filter((row: any) => row.Year === year);
   if (!filterData) {
-    console.log("no data!");
+    console.error("no data!");
     return;
   }
   console.log(filterData);
@@ -114,7 +114,7 @@ VALUES (
 const pgConnect = async function () {
   const results = await pool.query(insert_earnings);
   if (!results) {
-    console.log("No results from pg!");
+    console.error("No results from pg!");
     return;
   }
   console.log(results);
