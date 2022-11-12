@@ -7,7 +7,7 @@ import { URLSearchParams } from "url";
 //
 import "dotenv/config";
 //BTW, note we have to install ts types with some packages, all kinds of problems
-import pg from "pg";
+import * as pg from "pg";
 const { Pool } = pg;
 //Tried to use type string|undefined, but it caused a complicated bug
 const KEY: any = process.env.YAHOO_KEY;
